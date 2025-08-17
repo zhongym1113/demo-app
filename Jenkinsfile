@@ -11,7 +11,7 @@ pipeline {
             steps {
                 git branch: 'main', 
                     credentialsId: 'github-credentials',
-                    url: 'git@github.com:zhongym1113/demo-app.git'
+                    url: 'https://github.com/zhongym1113/demo-app.git'
             }
         }
 
