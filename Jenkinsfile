@@ -29,14 +29,15 @@ pipeline {
 
         stage('Push Image') {
             steps {
-                // 这里假设你已经配置好 Docker Hub 登录凭证
-                // def DOCKER_USERNAME = "zhong.yiming@qq.com"
-                // def DOCKER_PASSWORD = "uWbp@2025"
-                sh '''
-                echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-                docker tag $IMAGE_NAME:$IMAGE_TAG $DOCKER_USERNAME/$IMAGE_NAME:$IMAGE_TAG
-                docker push $DOCKER_USERNAME/$IMAGE_NAME:$IMAGE_TAG
-                '''
+                withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials',
+                                                 usernameVariable: 'DOCKER_USERNAME',
+                                                 passwordVariable: 'DOCKER_PASSWORD')]) {
+                    sh '''
+                    echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+                    docker tag $IMAGE_NAME:$IMAGE_TAG $DOCKER_USERNAME/$IMAGE_NAME:$IMAGE_TAG
+                    docker push $DOCKER_USERNAME/$IMAGE_NAME:$IMAGE_TAG
+                    '''
+                }
             }
         }
     }
